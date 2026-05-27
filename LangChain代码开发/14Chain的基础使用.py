@@ -14,8 +14,11 @@ history_data = [
   ("ai","床前明月光")
 ]
 
-prompt_text = chat_prompt_template.invoke({"history":history_data})
-
 model = ChatTongyi(model="qwen3-max")
-res = model.invoke(prompt_text)
-print(res.content,type(res))
+
+chain = chat_prompt_template | model
+# res = chain.invoke({"history":history_data})
+# print(res.content)
+
+for chunk in chain.stream({"history":history_data}):
+  print(chunk.content, end="", flush=True)
